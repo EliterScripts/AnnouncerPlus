@@ -55,6 +55,8 @@ public class MainPluginFile {
 	@DefaultConfig(sharedRoot = false)
 	private static Path defaultConfig;
 	
+	
+	
 	public static Path getConfigPath(){
 		return defaultConfig;
 		
