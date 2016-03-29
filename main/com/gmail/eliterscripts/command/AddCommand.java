@@ -6,11 +6,10 @@ import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 
-public class MainCommand implements CommandExecutor {
+public class AddCommand implements CommandExecutor{
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
-		return null;
 	}
-	
+
 }

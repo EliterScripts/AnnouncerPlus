@@ -9,7 +9,7 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
-import com.gamil.eliterscripts.MainPluginInterface;
+import com.gmail.eliterscripts.MainPluginInterface;
 
 public class HelpCommand implements CommandExecutor{
 
