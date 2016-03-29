@@ -24,7 +24,7 @@ public class CommandManager {
 			.description(Text.of("Shows the Help of " + MainPluginInterface.getPluginName()))
 			.executor(new HelpCommand())
 			.build();
-	CommandSpec AddCMD = CommandSpec.Builder()
+	CommandSpec AddCMD = CommandSpec.builder()
 			.permission(MainPluginInterface.getNodePrefix() + "add")
 			.description(Text.of("Adds a message to the broadcaster"))
 			.executor(new AddCommand())
