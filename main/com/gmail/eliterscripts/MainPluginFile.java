@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 
 
-@Plugin(id = "announcer_plus", name = "AnnouncerPlus", version = "A0.0.1")
+@Plugin(id = "announcerplus", name = "AnnouncerPlus", version = "A0.0.1")
 public class MainPluginFile {
 	
 	public MainPluginFile(){
@@ -71,8 +71,8 @@ public class MainPluginFile {
 	}
 	
 	@Listener
-	public void onServerStart(GameStartedServerEvent event){
-		logger.info(container.getName() + " v" + container.getVersion() + " by EliterScripts loaded.");
+	public static void onServerStart(GameStartedServerEvent event){
+		logger.info(getPluginName() + " v" + container.getVersion() + " by EliterScripts loaded.");
 		
 		CommandManager.RegisterAll();
 	}

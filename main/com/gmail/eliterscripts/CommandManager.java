@@ -14,37 +14,39 @@ public class CommandManager {
 	public CommandManager(){
 		
 	}
-	
-	static CommandSpec CreditsCMD = CommandSpec.builder()
-			.permission(MainPluginFile.getNodePrefix())
-			.description(Text.of("Shows the Credits Info of " + MainPluginFile.getPluginName()))
-			.executor(new CreditsCommand())
-			.build();
-	CommandSpec HelpCMD = CommandSpec.builder()
-			.permission(MainPluginFile.getNodePrefix())
-			.description(Text.of("Shows the Help of " + MainPluginFile.getPluginName()))
-			.executor(new HelpCommand())
-			.build();
-	static CommandSpec AddCMD = CommandSpec.builder()
-			.permission(MainPluginFile.getNodePrefix() + "add")
-			.description(Text.of("Adds a message to the broadcaster"))
-			.executor(new AddCommand())
-			.arguments(
-					GenericArguments.onlyOne(GenericArguments.string(Text.of("message"))),
-					GenericArguments.remainingJoinedStrings(Text.of("message"))
-					)
-			.build();
 			
 	
 	public static void RegisterAll(){
+		
+		CommandSpec CreditsCMD = CommandSpec.builder()
+				.permission(MainPluginFile.getNodePrefix())
+				.description(Text.of("Shows the Credits Info of " + MainPluginFile.getPluginName()))
+				.executor(new CreditsCommand())
+				.build();
+		CommandSpec HelpCMD = CommandSpec.builder()
+				.permission(MainPluginFile.getNodePrefix())
+				.description(Text.of("Shows the Help of " + MainPluginFile.getPluginName()))
+				.executor(new HelpCommand())
+				.build();
+		CommandSpec AddCMD = CommandSpec.builder()
+				.permission(MainPluginFile.getNodePrefix() + "add")
+				.description(Text.of("Adds a message to the broadcaster"))
+				.executor(new AddCommand())
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.string(Text.of("message"))),
+						GenericArguments.remainingJoinedStrings(Text.of("message"))
+						)
+				.build();
+		
 		CommandSpec MainCMD = CommandSpec.builder()
 				.description(Text.of(MainPluginFile.getPluginName() + " main command"))
 				.permission(MainPluginFile.getNodePrefix())
 				.executor(new MainCommand())
 				.child(CreditsCMD, "credits", "contibutor", "contributors", "developer", "developers")
 				.child(AddCMD, "add", "make", "+")
+				.child(HelpCMD, "help", "?", "instructions")
 				.build();
 		Sponge.getCommandManager().register(MainPluginFile.getContainer(), MainCMD, "announcer", "acc", "announcerplus",
-				"announce", "announcer", "announcements", "broadcaster", "announcer+");
+				"announce", "announcer", "announcements", "broadcaster");
 	}
 }
