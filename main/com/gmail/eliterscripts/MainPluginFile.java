@@ -49,9 +49,12 @@ public class MainPluginFile {
 		logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
 	}
 	
+	private PluginContainer contained;
+	
+	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
-		logger.info(pluginName + " v" + container.getVersion() + " by EliterScripts loaded.");
+		logger.info(pluginName + " v" + contained.getVersion() + " by EliterScripts loaded.");
 		
 		CommandManager.RegisterAll();
 	}
