@@ -25,6 +25,9 @@ public class MainPluginFile {
 	public static PluginContainer container;
 	
 	@Inject
+	public static Plugin pl;
+	
+	@Inject
 	public static Logger logger;
 	
 	@Inject
@@ -49,13 +52,19 @@ public class MainPluginFile {
 		logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
 	}
 	
-	private PluginContainer contained;
+	private Optional<String> getVersion(){
+		try{
+			return container.getVersion();
+		} catch (Exception e){
+			logger.warn("Could not get plugin version. ", 4);
+			return Optional.of("x.x.x");
+		}
+	}
 	
 	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
-		Optional<String> pluginVersion = contained.getVersion();
-		logger.info(pluginName + " v" + pluginVersion + " by EliterScripts loaded.");
+		logger.info(pluginName + " v" + getVersion() + " by EliterScripts loaded.");
 		
 		CommandManager.RegisterAll();
 	}
