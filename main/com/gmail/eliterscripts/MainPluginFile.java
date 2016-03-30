@@ -49,7 +49,7 @@ public class MainPluginFile {
 	}
 	
 	@Inject
-	private Logger logger;
+	private static Logger logger;
 	
 	@Inject
 	@DefaultConfig(sharedRoot = false)
@@ -62,7 +62,7 @@ public class MainPluginFile {
 		
 	}
 	
-	public Logger getLogger(){
+	public static Logger getLogger(){
 		return logger;
 	}
 	

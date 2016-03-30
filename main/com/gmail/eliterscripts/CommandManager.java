@@ -36,7 +36,7 @@ public class CommandManager {
 			.build();
 			
 	
-	public void RegisterAll(){
+	public static void RegisterAll(){
 		CommandSpec MainCMD = CommandSpec.builder()
 				.description(Text.of(MainPluginFile.getPluginName() + " main command"))
 				.permission(MainPluginFile.getNodePrefix())
