@@ -66,6 +66,10 @@ public class MainPluginFile {
 		return logger;
 	}
 	
+	public static void warner(String warnMessage, int code){
+		logger.warn( getPluginName() + ": " + warnMessage + " [code " + code + "]");
+	}
+	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
 		logger.info(container.getName() + " v" + container.getVersion() + " by EliterScripts loaded.");

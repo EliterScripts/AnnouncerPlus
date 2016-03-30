@@ -15,18 +15,18 @@ public class CommandManager {
 		
 	}
 	
-	CommandSpec CreditsCMD = CommandSpec.builder()
-			.permission(MainPluginInterface.getNodePrefix())
-			.description(Text.of("Shows the Credits Info of " + MainPluginInterface.getPluginName()))
+	static CommandSpec CreditsCMD = CommandSpec.builder()
+			.permission(MainPluginFile.getNodePrefix())
+			.description(Text.of("Shows the Credits Info of " + MainPluginFile.getPluginName()))
 			.executor(new CreditsCommand())
 			.build();
 	CommandSpec HelpCMD = CommandSpec.builder()
-			.permission(MainPluginInterface.getNodePrefix())
-			.description(Text.of("Shows the Help of " + MainPluginInterface.getPluginName()))
+			.permission(MainPluginFile.getNodePrefix())
+			.description(Text.of("Shows the Help of " + MainPluginFile.getPluginName()))
 			.executor(new HelpCommand())
 			.build();
-	CommandSpec AddCMD = CommandSpec.builder()
-			.permission(MainPluginInterface.getNodePrefix() + "add")
+	static CommandSpec AddCMD = CommandSpec.builder()
+			.permission(MainPluginFile.getNodePrefix() + "add")
 			.description(Text.of("Adds a message to the broadcaster"))
 			.executor(new AddCommand())
 			.arguments(

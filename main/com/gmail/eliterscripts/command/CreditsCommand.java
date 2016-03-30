@@ -9,18 +9,19 @@ import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
+import com.gmail.eliterscripts.MainPluginFile;
 import com.gmail.eliterscripts.MainPluginInterface;
 
 public class CreditsCommand implements CommandExecutor{
 	
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		src.sendMessage(Text.builder(MainPluginInterface.getContainer().getId())
+		src.sendMessage(Text.builder(MainPluginFile.getContainer().getId())
                 .color(TextColors.GREEN).style(TextStyles.BOLD)
                 .append(
                         Text.builder(" developed by ").color(TextColors.GREEN).build()
                         )
                 .append(
-                                Text.builder(MainPluginInterface.getAuthor()).style(TextStyles.BOLD).style(TextStyles.ITALIC).build()
+                                Text.builder(MainPluginFile.getAuthor()).style(TextStyles.BOLD).style(TextStyles.ITALIC).build()
                 )
                 .build()
         );
