@@ -19,17 +19,17 @@ public class CommandManager {
 	public static void RegisterAll(){
 		
 		CommandSpec CreditsCMD = CommandSpec.builder()
-				.permission(MainPluginFile.getNodePrefix())
-				.description(Text.of("Shows the Credits Info of " + MainPluginFile.getPluginName()))
+				.permission(MainPluginFile.nodePrefix)
+				.description(Text.of("Shows the Credits Info of " + MainPluginFile.pluginName))
 				.executor(new CreditsCommand())
 				.build();
 		CommandSpec HelpCMD = CommandSpec.builder()
-				.permission(MainPluginFile.getNodePrefix())
-				.description(Text.of("Shows the Help of " + MainPluginFile.getPluginName()))
+				.permission(MainPluginFile.nodePrefix)
+				.description(Text.of("Shows the Help of " + MainPluginFile.pluginName))
 				.executor(new HelpCommand())
 				.build();
 		CommandSpec AddCMD = CommandSpec.builder()
-				.permission(MainPluginFile.getNodePrefix() + "add")
+				.permission(MainPluginFile.nodePrefix + "add")
 				.description(Text.of("Adds a message to the broadcaster"))
 				.executor(new AddCommand())
 				.arguments(
@@ -39,14 +39,14 @@ public class CommandManager {
 				.build();
 		
 		CommandSpec MainCMD = CommandSpec.builder()
-				.description(Text.of(MainPluginFile.getPluginName() + " main command"))
-				.permission(MainPluginFile.getNodePrefix())
+				.description(Text.of(MainPluginFile.pluginName + " main command"))
+				.permission(MainPluginFile.nodePrefix)
 				.executor(new MainCommand())
 				.child(CreditsCMD, "credits", "contibutor", "contributors", "developer", "developers")
 				.child(AddCMD, "add", "make", "+")
 				.child(HelpCMD, "help", "?", "instructions")
 				.build();
-		Sponge.getCommandManager().register(MainPluginFile.getContainer(), MainCMD, "announcer", "acc", "announcerplus",
-				"announce", "announcer", "announcements", "broadcaster");
+		Sponge.getCommandManager().register(MainPluginFile.container, MainCMD, "announcerplus", "announcer", "acc");
+		MainPluginFile.logger.info("main command has been made!");
 	}
 }

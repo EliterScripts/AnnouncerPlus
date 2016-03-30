@@ -21,58 +21,37 @@ import org.slf4j.Logger;
 @Plugin(id = "announcerplus", name = "AnnouncerPlus", version = "A0.0.1")
 public class MainPluginFile {
 	
-	public MainPluginFile(){
-		
-	}
+	@Inject
+	public static PluginContainer container;
 	
 	@Inject
-	private static PluginContainer container;
-	
-	public static PluginContainer getContainer(){
-		return container;
-	}
-	
-	public static String getPluginName(){
-		return "Announcer Plus";
-	}
-	
-	public static String getAuthor(){
-		return "EliterScripts";
-	}
-	
-	public static String getWebsite(){
-		return "http://google.com";
-	}
-	
-	public static String getNodePrefix(){
-		return "announcerplus";
-	}
-	
-	@Inject
-	private static Logger logger;
+	public static Logger logger;
 	
 	@Inject
 	@DefaultConfig(sharedRoot = false)
 	private static Path defaultConfig;
 	
-	
-	
-	public static Path getConfigPath(){
-		return defaultConfig;
-		
-	}
-	
-	public static Logger getLogger(){
-		return logger;
+	public static String pluginName;
+	public static String author;
+	public static String website;
+	public static Path configPath;
+	public static String nodePrefix;
+
+	public MainPluginFile(){
+		MainPluginFile.pluginName = "Announcer Plus";
+		MainPluginFile.author = "Eliter Scripts";
+		MainPluginFile.website = "https://google.com";
+		MainPluginFile.configPath = defaultConfig;
+		MainPluginFile.nodePrefix = "announcerplus";
 	}
 	
 	public static void warner(String warnMessage, int code){
-		logger.warn( getPluginName() + ": " + warnMessage + " [code " + code + "]");
+		logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
 	}
 	
 	@Listener
-	public static void onServerStart(GameStartedServerEvent event){
-		logger.info(getPluginName() + " v" + container.getVersion() + " by EliterScripts loaded.");
+	public void onServerStart(GameStartedServerEvent event){
+		logger.info(pluginName + " v" + container.getVersion() + " by EliterScripts loaded.");
 		
 		CommandManager.RegisterAll();
 	}

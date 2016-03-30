@@ -20,7 +20,7 @@ public class ConfigManager {
 	
 	public ConfigManager(){
 		
-		Path path = MainPluginFile.getConfigPath();
+		Path path = MainPluginFile.configPath;
 		loader =
 		HoconConfigurationLoader.builder().setPath(path).build();
 	}
@@ -35,7 +35,7 @@ public class ConfigManager {
 			.setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
 		} catch (IOException e) {
 			e.printStackTrace();
-			MainPluginFile.getLogger().warn(MainPluginFile.getPluginName() + " returned an error.", 0);
+			MainPluginFile.logger.warn(MainPluginFile.pluginName + " returned an error.", 0);
 		}
 	}
 	

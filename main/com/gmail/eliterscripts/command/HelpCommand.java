@@ -14,13 +14,13 @@ import com.gmail.eliterscripts.MainPluginFile;
 public class HelpCommand implements CommandExecutor{
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-			src.sendMessage(Text.builder(MainPluginFile.getPluginName() )
+			src.sendMessage(Text.builder(MainPluginFile.pluginName )
 	                .color(TextColors.GREEN).style(TextStyles.BOLD)
 	                .append(
 	                        Text.builder(" developed by ").color(TextColors.GREEN).build()
 	                        )
 	                .append(
-	                                Text.builder(MainPluginFile.getAuthor()).style(TextStyles.BOLD).style(TextStyles.ITALIC).build()
+	                                Text.builder(MainPluginFile.author).style(TextStyles.BOLD).style(TextStyles.ITALIC).build()
 	                )
 	                .build()
 	        );
