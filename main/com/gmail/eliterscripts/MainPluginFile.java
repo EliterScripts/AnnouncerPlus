@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.slf4j.Logger;
 
 
-@Plugin(id = "announcer_plus", name = "AnnouncerPlus", version = "A0.0")
+@Plugin(id = "announcer_plus", name = "AnnouncerPlus", version = "A0.0.1")
 public class MainPluginFile {
 	
 	public MainPluginFile(){
