@@ -54,7 +54,8 @@ public class MainPluginFile {
 	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
-		logger.info(pluginName + " v" + contained.getVersion() + " by EliterScripts loaded.");
+		Optional<String> pluginVersion = contained.getVersion();
+		logger.info(pluginName + " v" + pluginVersion + " by EliterScripts loaded.");
 		
 		CommandManager.RegisterAll();
 	}
