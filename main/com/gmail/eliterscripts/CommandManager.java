@@ -46,7 +46,7 @@ public class CommandManager {
 				.child(AddCMD, "add", "make", "+")
 				.child(HelpCMD, "help", "?", "instructions")
 				.build();
-		Sponge.getCommandManager().register(MainPluginFile.container, MainCMD, "announcerplus", "announcer", "acc");
+		Sponge.getCommandManager().register(MainPluginFile.instance().getContainer(), MainCMD, "announcerplus", "announcer", "acc");
 		MainPluginFile.logger.info("main command has been made!");
 	}
 }

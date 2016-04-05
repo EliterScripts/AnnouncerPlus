@@ -22,7 +22,7 @@ import org.slf4j.Logger;
 public class MainPluginFile {
 	
 	@Inject
-	public static PluginContainer container;
+	public PluginContainer container;
 	
 	@Inject
 	public static Plugin pl;
@@ -74,6 +74,15 @@ public class MainPluginFile {
 		);
 		
 	}
+	
+	public static MainPluginFile instance(){
+		return instance();
+	}
+	
+	public PluginContainer getContainer(){
+		return container;
+	}
+	
 	
 	@Listener
 	public void lie (ClientPingServerEvent event){
