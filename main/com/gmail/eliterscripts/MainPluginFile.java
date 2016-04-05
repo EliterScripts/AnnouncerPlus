@@ -37,6 +37,8 @@ public class MainPluginFile {
 	public static Path configPath;
 	public static String nodePrefix;
 	public static String version;
+	
+	private static MainPluginFile instance;
 
 	public MainPluginFile(){
 		MainPluginFile.pluginName = "Announcer Plus";
@@ -45,6 +47,7 @@ public class MainPluginFile {
 		MainPluginFile.website = "https://google.com";
 		MainPluginFile.configPath = defaultConfig;
 		MainPluginFile.nodePrefix = "announcerplus";
+		instance = this;
 	}
 	
 	public static void warner(String warnMessage, int code){
@@ -73,7 +76,7 @@ public class MainPluginFile {
 	}
 	
 	public static MainPluginFile instance(){
-		return instance();
+		return instance;
 	}
 	
 	public PluginContainer getContainer(){
