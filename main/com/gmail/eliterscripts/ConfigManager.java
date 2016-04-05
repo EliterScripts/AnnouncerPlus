@@ -18,14 +18,13 @@ public class ConfigManager {
 	
 	private static ArrayList<Text> Messages;
 	
-	private static ConfigManager instance;
+	private static final ConfigManager instance = new ConfigManager();
 	
 	public ConfigManager(){
 		
 		Path path = MainPluginFile.getPath();
 		loader =
 		HoconConfigurationLoader.builder().setPath(path).build();
-		instance = this;
 	}
 	
 	public static ConfigManager instance(){

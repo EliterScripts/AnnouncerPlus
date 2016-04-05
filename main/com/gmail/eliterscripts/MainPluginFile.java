@@ -58,6 +58,8 @@ public class MainPluginFile {
 		//logger.info(pluginName + " v" + version + " by EliterScripts loaded.");
 		
 		CommandManager.registerAll();
+		
+		ConfigManager.instance();
 		ConfigManager.startup();
 	}
 	
