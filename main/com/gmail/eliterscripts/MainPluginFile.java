@@ -29,7 +29,7 @@ public class MainPluginFile {
 	
 	@Inject
 	@DefaultConfig(sharedRoot = false)
-	private Path defaultConfig;
+	private Path ConfigPath;
 	
 	public static String pluginName;
 	public static String author;
@@ -82,8 +82,8 @@ public class MainPluginFile {
 		return container;
 	}
 	
-	public Path getPath(){
-		return defaultConfig;
+	public static Path getPath(){
+		return instance().ConfigPath;
 	}
 	
 	

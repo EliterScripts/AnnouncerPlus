@@ -22,7 +22,7 @@ public class ConfigManager {
 	
 	public ConfigManager(){
 		
-		Path path = MainPluginFile.instance().getPath();
+		Path path = MainPluginFile.getPath();
 		loader =
 		HoconConfigurationLoader.builder().setPath(path).build();
 		instance = this;
@@ -37,16 +37,19 @@ public class ConfigManager {
 	}
 	
 	private static void setValues(){
-		ConfigurationNode rootNode;
-		rootNode = loader.createEmptyNode(ConfigurationOptions.defaults());
-		rootNode.getNode("messages").setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
+		try{
+			ConfigurationNode rootNode = loader.load();
+		} catch (IOException e){
+			e.printStackTrace();
+			MainPluginFile.warner("error attempting to load config.", 5);
+		}
 		
 		try {
 			loader.load().getNode("messages").setComment("The message list to be broadcasted")
 			.setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
 		} catch (IOException e) {
 			e.printStackTrace();
-			MainPluginFile.instance().logger.warn(MainPluginFile.pluginName + " returned an error.", 0);
+			MainPluginFile.warner("error attempting to load message node in config.", 0);
 		}
 	}
 	
