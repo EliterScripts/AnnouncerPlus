@@ -34,7 +34,6 @@ public class MainPluginFile {
 	public static String pluginName;
 	public static String author;
 	public static String website;
-	public static Path configPath;
 	public static String nodePrefix;
 	public static String version;
 	
@@ -45,7 +44,6 @@ public class MainPluginFile {
 		MainPluginFile.version = "A0.0";
 		MainPluginFile.author = "Eliter Scripts";
 		MainPluginFile.website = "https://google.com";
-		MainPluginFile.configPath = defaultConfig;
 		MainPluginFile.nodePrefix = "announcerplus";
 		instance = this;
 	}
@@ -60,6 +58,7 @@ public class MainPluginFile {
 		//logger.info(pluginName + " v" + version + " by EliterScripts loaded.");
 		
 		CommandManager.registerAll();
+		ConfigManager.startup();
 	}
 	
 	@Listener
@@ -81,6 +80,10 @@ public class MainPluginFile {
 	
 	public PluginContainer getContainer(){
 		return container;
+	}
+	
+	public Path getPath(){
+		return defaultConfig;
 	}
 	
 	

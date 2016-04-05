@@ -18,14 +18,25 @@ public class ConfigManager {
 	
 	private static ArrayList<Text> Messages;
 	
+	private static ConfigManager instance;
+	
 	public ConfigManager(){
 		
-		Path path = MainPluginFile.configPath;
+		Path path = MainPluginFile.instance().getPath();
 		loader =
 		HoconConfigurationLoader.builder().setPath(path).build();
+		instance = this;
 	}
 	
-	private void setValues(){
+	public static ConfigManager instance(){
+		return instance;
+	}
+	
+	public static void startup(){
+		setValues();
+	}
+	
+	private static void setValues(){
 		ConfigurationNode rootNode;
 		rootNode = loader.createEmptyNode(ConfigurationOptions.defaults());
 		rootNode.getNode("messages").setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
