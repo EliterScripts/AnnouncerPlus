@@ -39,9 +39,11 @@ public class MainPluginFile {
 	public static String website;
 	public static Path configPath;
 	public static String nodePrefix;
+	public static String version;
 
 	public MainPluginFile(){
 		MainPluginFile.pluginName = "Announcer Plus";
+		MainPluginFile.version = "A0.0";
 		MainPluginFile.author = "Eliter Scripts";
 		MainPluginFile.website = "https://google.com";
 		MainPluginFile.configPath = defaultConfig;
@@ -52,21 +54,12 @@ public class MainPluginFile {
 		logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
 	}
 	
-	private Optional<String> getVersion(){
-		try{
-			return container.getVersion();
-		} catch (Exception e){
-			logger.warn("Could not get plugin version. ", 4);
-			return Optional.of("x.x.x");
-		}
-	}
-	
 	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
-		logger.info(pluginName + " v" + getVersion() + " by EliterScripts loaded.");
+		//logger.info(pluginName + " v" + version + " by EliterScripts loaded.");
 		
-		CommandManager.RegisterAll();
+		CommandManager.registerAll();
 	}
 	
 	@Listener

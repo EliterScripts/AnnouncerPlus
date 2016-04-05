@@ -16,7 +16,7 @@ public class CommandManager {
 	}
 			
 	
-	public static void RegisterAll(){
+	public static void registerAll(){
 		
 		CommandSpec CreditsCMD = CommandSpec.builder()
 				.permission(MainPluginFile.nodePrefix)
