@@ -25,14 +25,11 @@ public class MainPluginFile {
 	public PluginContainer container;
 	
 	@Inject
-	public static Plugin pl;
-	
-	@Inject
-	public static Logger logger;
+	public Logger logger;
 	
 	@Inject
 	@DefaultConfig(sharedRoot = false)
-	private static Path defaultConfig;
+	private Path defaultConfig;
 	
 	public static String pluginName;
 	public static String author;
@@ -51,7 +48,7 @@ public class MainPluginFile {
 	}
 	
 	public static void warner(String warnMessage, int code){
-		logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
+		instance().logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
 	}
 	
 	

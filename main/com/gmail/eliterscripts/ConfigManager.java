@@ -35,7 +35,7 @@ public class ConfigManager {
 			.setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
 		} catch (IOException e) {
 			e.printStackTrace();
-			MainPluginFile.logger.warn(MainPluginFile.pluginName + " returned an error.", 0);
+			MainPluginFile.instance().logger.warn(MainPluginFile.pluginName + " returned an error.", 0);
 		}
 	}
 	
