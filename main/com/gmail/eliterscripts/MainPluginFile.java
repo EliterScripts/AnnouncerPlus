@@ -59,7 +59,7 @@ public class MainPluginFile {
 		
 		CommandManager.registerAll();
 		
-		ConfigManager.instance();
+		new ConfigManager();
 		ConfigManager.startup();
 	}
 	

@@ -16,7 +16,7 @@ public class ConfigManager {
 	
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	
-	private static ArrayList<Text> Messages;
+	private static ArrayList<Text> Messages = new ArrayList<Text>();
 	
 	private static final ConfigManager instance = new ConfigManager();
 	
