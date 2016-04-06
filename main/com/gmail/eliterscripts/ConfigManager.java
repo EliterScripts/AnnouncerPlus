@@ -106,15 +106,13 @@ public class ConfigManager {
 	}
 	
 	public static Integer addMessage(Optional<String> message){
-		try{
-			String Message_ = message.get();
+		if(message.isPresent()){
+			String Message = message.get();
 			return addMessage( 
-					(Text) TextSerializers.FORMATTING_CODE.deserialize( Message_ ) 
+					(Text) TextSerializers.FORMATTING_CODE.deserialize( Message ) 
 					);
-		}catch(NoSuchElementException e){
-			e.printStackTrace();
-			MainPluginFile.warner("error attempting to unwrap string optional.", 10);
-			return null;
+		}else{
+			//return 
 		}
 	}
 	

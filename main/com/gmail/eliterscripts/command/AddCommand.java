@@ -14,12 +14,8 @@ public class AddCommand implements CommandExecutor{
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Optional<String> addingMessage = args.<String>getOne( Text.of("message") );
-		try{
 			int indexNumber = ConfigManager.addMessage(addingMessage);
 			src.sendMessage(Text.of("Your message was added to the list, indexed under '" + indexNumber + "'."));
-		}catch(NullPointerException e){
-			src.sendMessage(Text.of("Sorry, there was an error adding you message."));
-		}
 		return null;
 	}
 
