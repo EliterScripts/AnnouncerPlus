@@ -3,7 +3,6 @@ package com.gmail.eliterscripts;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.spongepowered.api.text.Text;
@@ -90,7 +89,7 @@ public class ConfigManager {
 		}
 	}
 	
-	public static Integer addMessage(Text message){
+	public static Optional<Integer> addMessage(Text message){
 			Messages.add( message );
 			instance();
 			instance().load();
@@ -102,17 +101,17 @@ public class ConfigManager {
 						message
 						);
 			instance().save();
-		return Messages.indexOf( message );
+		return Optional.of(Messages.indexOf( message ));
 	}
 	
-	public static Integer addMessage(Optional<String> message){
+	public static Optional<Integer> addMessage(Optional<String> message){
 		if(message.isPresent()){
 			String Message = message.get();
 			return addMessage( 
 					(Text) TextSerializers.FORMATTING_CODE.deserialize( Message ) 
 					);
 		}else{
-			//return 
+			return Optional.empty();
 		}
 	}
 	
