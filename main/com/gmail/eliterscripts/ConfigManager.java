@@ -3,6 +3,7 @@ package com.gmail.eliterscripts;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.spongepowered.api.text.Text;
@@ -105,9 +106,16 @@ public class ConfigManager {
 	}
 	
 	public static Integer addMessage(Optional<String> message){
-		return addMessage( 
-				(Text) TextSerializers.FORMATTING_CODE.deserialize( (Optional<String>) message ) 
-				);
+		try{
+			String Message_ = message.get();
+			return addMessage( 
+					(Text) TextSerializers.FORMATTING_CODE.deserialize( Message_ ) 
+					);
+		}catch(NoSuchElementException e){
+			e.printStackTrace();
+			MainPluginFile.warner("error attempting to unwrap string optional.", 10);
+			return null;
+		}
 	}
 	
 	public static ArrayList<Text> getMessages(){
