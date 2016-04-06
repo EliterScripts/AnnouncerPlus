@@ -55,12 +55,12 @@ public class MainPluginFile {
 	
 	@Listener
 	public void onServerStart(GameStartedServerEvent event){
-		//logger.info(pluginName + " v" + version + " by EliterScripts loaded.");
-		
-		CommandManager.registerAll();
+		logger.info(pluginName + " v" + version + " by EliterScripts loaded.");
 		
 		new ConfigManager();
 		ConfigManager.startup();
+		
+		CommandManager.registerAll();
 	}
 	
 	@Listener

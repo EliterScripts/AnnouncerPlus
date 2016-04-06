@@ -3,6 +3,7 @@ package com.gmail.eliterscripts;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Optional;
 
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
@@ -103,9 +104,9 @@ public class ConfigManager {
 		return Messages.indexOf( message );
 	}
 	
-	public static Integer addMessage(String message){
+	public static Integer addMessage(Optional<String> message){
 		return addMessage( 
-				(Text) TextSerializers.FORMATTING_CODE.deserialize( (String) message ) 
+				(Text) TextSerializers.FORMATTING_CODE.deserialize( (Optional<String>) message ) 
 				);
 	}
 	
