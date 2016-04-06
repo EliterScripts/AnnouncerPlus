@@ -9,11 +9,17 @@ import org.spongepowered.api.command.args.CommandContext;
 import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.text.Text;
 import com.gmail.eliterscripts.ConfigManager;
+import com.gmail.eliterscripts.MainPluginFile;
 
 public class AddCommand implements CommandExecutor{
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		Optional<String> addingMessage = args.<String>getOne( Text.of("message") );
+		if(addingMessage.isPresent()){
+			MainPluginFile.warner("it works!!!", -1);
+		}else{
+			MainPluginFile.warner("it does not work!!!", -2);
+		}
 			Optional<Integer> indexNumber = ConfigManager.addMessage(addingMessage);
 			if(indexNumber.isPresent() ){
 				Integer indexedNumber = indexNumber.get();
