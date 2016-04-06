@@ -5,12 +5,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 
 import org.spongepowered.api.text.Text;
+import org.spongepowered.api.text.serializer.TextSerializers;
 
-import ninja.leaping.configurate.ConfigurationNode;
-import ninja.leaping.configurate.ConfigurationOptions;
+import com.google.common.reflect.TypeToken;
+
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
+import ninja.leaping.configurate.objectmapping.ObjectMappingException;
 
 public class ConfigManager {
 	
@@ -19,6 +21,7 @@ public class ConfigManager {
 	private static ArrayList<Text> Messages = new ArrayList<Text>();
 	
 	private static final ConfigManager instance = new ConfigManager();
+	private CommentedConfigurationNode root;
 	
 	public ConfigManager(){
 		
@@ -32,65 +35,78 @@ public class ConfigManager {
 	}
 	
 	public static void startup(){
-		setValues();
+		instance();
+		instance().load();
+		instance().setValues();
+		instance().save();
 	}
 	
-	private static void setValues(){
-		try{
-			ConfigurationNode rootNode = loader.load();
-		} catch (IOException e){
-			e.printStackTrace();
-			MainPluginFile.warner("error attempting to load config.", 5);
-		}
-		
-		try {
-			loader.load().getNode("messages").setComment("The message list to be broadcasted")
-			.setValue(loader.createEmptyNode(ConfigurationOptions.defaults()));
-		} catch (IOException e) {
-			e.printStackTrace();
-			MainPluginFile.warner("error attempting to load message node in config.", 0);
+	private void setValues(){
+		if( instance().root.getNode("messages") == null ){
+			try {
+				root.getNode("messages").setComment("Messages that will be broadcasted.").setValue(
+						TypeToken.of(Text.class), Text.of(MainPluginFile.pluginName)
+						);
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+				MainPluginFile.warner("error attempting to generate default message in config.", 8);
+			}
+		}else{
+			sort( root.getNode("messages") );
 		}
 	}
 	
-	public void loadValues(){
-		try {
-			ArrayList<? extends CommentedConfigurationNode> getNodes =
-					(ArrayList<? extends CommentedConfigurationNode>) loader.load().getNode("messages").getChildrenList();
-			for( CommentedConfigurationNode node : getNodes ){
-				addMessage( node.getValue() );
+	private void sort(CommentedConfigurationNode node){
+		for(CommentedConfigurationNode value : node.getChildrenList()){
+			if( value.getNode("message").getValue().equals(String.class) ){
+				Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
+			}else if( value.getNode("message").getValue().equals(Text.class) ){
+				Messages.add((Text) value.getNode("message").getValue(Text.class));
+			}else{
+				MainPluginFile.warner("error attempting to read a message in config.", 7);
 			}
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			MainPluginFile.warner("error attempting to get messages children from config.", 2);
+			
 		}
-		
 	}
 	
-	private static void addToConfig(Text message){
+	private void load(){
 		try{
-			loader.load().getNode("messages").getNode( Integer.toString( Messages.size() + 1) )
-			.setValue(message)
-			;
+			this.root = loader.load();
 		} catch (IOException e){
-			MainPluginFile.warner("error attempting to add message to config.", 3);
+			e.printStackTrace();
+			MainPluginFile.warner("error attempting to load config.", 6);
 		}
 	}
 	
-	public static Integer addMessage(Object message){
-		if(message.getClass().equals(String.class)){
-			Messages.add(Text.of(message));
-			addToConfig(Text.of(message));
-		}else
-			if(message.getClass().equals(Text.class)){
-				Messages.add((Text) message);
-				addToConfig((Text) message);
-			}
-		else{
-			MainPluginFile.warner("error attempting to add message.", 1);
+	private void save(){
+		try {
+			loader.save(root);
+		} catch (IOException e) {
+			e.printStackTrace();
+			MainPluginFile.warner("error attempting to save config.", 9);
 		}
+	}
+	
+	public static Integer addMessage(Text message){
+			Messages.add( message );
+			instance();
+			instance().load();
+			instance().root.getNode(
+				String.valueOf( 
+						Messages.indexOf( message )
+					)
+				).setValue(
+						message
+						);
+			instance().save();
 		return Messages.indexOf( message );
+	}
+	
+	public static Integer addMessage(String message){
+		return addMessage( 
+				(Text) TextSerializers.FORMATTING_CODE.deserialize( (String) message ) 
+				);
 	}
 	
 	public static ArrayList<Text> getMessages(){
