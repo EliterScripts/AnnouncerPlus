@@ -63,6 +63,12 @@ public class MainPluginFile {
 		CommandManager.registerAll();
 	}
 	
+	public static Object reloadConfig(){
+		new ConfigManager();
+		ConfigManager.startup();
+		return null;
+	}
+	
 	@Listener
 	public void onJoin(ClientConnectionEvent.Join event) {
 		

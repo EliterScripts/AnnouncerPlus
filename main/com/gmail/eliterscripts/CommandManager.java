@@ -33,8 +33,15 @@ public class CommandManager {
 				.description(Text.of("Adds a message to the broadcaster"))
 				.executor(new AddCommand())
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.string(Text.of("message"))),
 						GenericArguments.remainingJoinedStrings(Text.of("message"))
+						)
+				.build();
+		CommandSpec ListCMD = CommandSpec.builder()
+				.permission(MainPluginFile.nodePrefix + "add")
+				.description(Text.of("Adds a message to the broadcaster"))
+				.executor(new AddCommand())
+				.arguments(
+						GenericArguments.onlyOne(GenericArguments.integer(Text.of("page number")))
 						)
 				.build();
 		

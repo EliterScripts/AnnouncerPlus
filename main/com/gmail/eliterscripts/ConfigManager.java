@@ -19,7 +19,9 @@ public class ConfigManager {
 	
 	private static ConfigurationLoader<CommentedConfigurationNode> loader;
 	
-	private static ArrayList<Text> Messages = new ArrayList<Text>();
+	public static ArrayList<Text> Messages = new ArrayList<Text>();
+	
+	public static Optional<Integer> messageListLength;
 	
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
@@ -29,6 +31,7 @@ public class ConfigManager {
 		Path path = MainPluginFile.getPath();
 		loader =
 		HoconConfigurationLoader.builder().setPath(path).build();
+		messageListLength = Optional.empty();
 	}
 	
 	public static ConfigManager instance(){
@@ -54,6 +57,46 @@ public class ConfigManager {
 			}
 		}else{
 			sort( root.getNode("messages") );
+		}
+		if( instance().root.getNode("settings") == null ){
+			try {
+				root.getNode("settings").setComment("Additional settings for " + MainPluginFile.pluginName)
+				.getNode("list length").setComment("This sets how long the list should be sent to the user at once")
+				.setValue(TypeToken.of(Integer.class), 5);
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+				MainPluginFile.warner("error attempting to generate default list length in config.", 12);
+			}
+		}else{
+			messageListLength = Optional.of( root.getNode("settings").getNode("list length").getInt() );
+			if( messageListLength.isPresent() ){
+				Integer length = messageListLength.get();
+				if(length < 0 ){
+					MainPluginFile.warner("fixing list length. It's value is below zero.", 13);
+					length = Math.abs(length);
+					messageListLength = Optional.of(length);
+					try {
+						root.getNode("settings").getNode("list length").setComment(
+								"This sets how long the list should be sent to the user at once")
+						.setValue(TypeToken.of(Integer.class), length);
+					} catch (ObjectMappingException e) {
+						e.printStackTrace();
+						MainPluginFile.warner("error attempting to fix list length node in config.", 14);
+					}
+				}else if(length == 0){
+					MainPluginFile.warner("fixing list length. It's value is zero.", 15);
+					length = 5;
+					messageListLength = Optional.of(length);
+					try {
+						root.getNode("settings").getNode("list length").setComment(
+								"This sets how long the list should be sent to the user at once")
+						.setValue(TypeToken.of(Integer.class), length);
+					} catch (ObjectMappingException e) {
+						e.printStackTrace();
+						MainPluginFile.warner("error attempting to fix list length node in config.", 15);
+					}
+				}
+			}
 		}
 	}
 	
@@ -93,13 +136,19 @@ public class ConfigManager {
 			Messages.add( message );
 			instance();
 			instance().load();
-			instance().root.getNode(
-				String.valueOf( 
-						Messages.indexOf( message )
-					)
-				).setValue(
-						message
-						);
+			try {
+				instance().root.getNode(
+					String.valueOf( 
+							Messages.indexOf( message )
+						)
+					).getNode("message").setValue(
+							TypeToken.of(Text.class), message
+							);
+			} catch (ObjectMappingException e) {
+				e.printStackTrace();
+				MainPluginFile.warner("error attempting to set value of message in config.", 11);
+				return Optional.empty();
+			}
 			instance().save();
 		return Optional.of(Messages.indexOf( message ));
 	}
@@ -115,8 +164,8 @@ public class ConfigManager {
 		}
 	}
 	
-	public static ArrayList<Text> getMessages(){
-		return Messages;
+	public static Optional<ArrayList<Text>> getMessages(){
+		return Optional.of(Messages);
 	}
 	
 	
