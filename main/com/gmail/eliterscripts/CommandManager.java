@@ -8,6 +8,7 @@ import org.spongepowered.api.text.Text;
 import com.gmail.eliterscripts.command.AddCommand;
 import com.gmail.eliterscripts.command.CreditsCommand;
 import com.gmail.eliterscripts.command.HelpCommand;
+import com.gmail.eliterscripts.command.ListCommand;
 import com.gmail.eliterscripts.command.MainCommand;
 
 public class CommandManager {
@@ -38,10 +39,10 @@ public class CommandManager {
 				.build();
 		CommandSpec ListCMD = CommandSpec.builder()
 				.permission(MainPluginFile.nodePrefix + "add")
-				.description(Text.of("Adds a message to the broadcaster"))
-				.executor(new AddCommand())
+				.description(Text.of("Lists messages to be broadcasted"))
+				.executor(new ListCommand())
 				.arguments(
-						GenericArguments.onlyOne(GenericArguments.integer(Text.of("page number")))
+						GenericArguments.optional(GenericArguments.integer(Text.of("page number")))
 						)
 				.build();
 		
@@ -52,6 +53,7 @@ public class CommandManager {
 				.child(CreditsCMD, "credits", "contibutor", "contributors", "developer", "developers")
 				.child(AddCMD, "add", "make", "+")
 				.child(HelpCMD, "help", "?", "instructions")
+				.child(ListCMD, "list", "messages", "view", "ls")
 				.build();
 		Sponge.getCommandManager().register(MainPluginFile.instance().getContainer(), MainCMD, "announcerplus", "announcer", "acc");
 		MainPluginFile.instance().logger.info("main command has been made!");
