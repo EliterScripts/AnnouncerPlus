@@ -5,11 +5,14 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Optional;
 
+import org.spongepowered.api.config.DefaultConfig;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.serializer.TextSerializers;
 
 import com.google.common.reflect.TypeToken;
+import com.google.inject.Inject;
 
+import ninja.leaping.configurate.ConfigurationOptions;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -25,6 +28,10 @@ public class ConfigManager {
 	
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
+	
+	@Inject
+	@DefaultConfig(sharedRoot = false)
+	private Path path;
 	
 	public ConfigManager(){
 		
@@ -47,6 +54,7 @@ public class ConfigManager {
 	
 	private void setValues(){
 		if( instance().root.getNode("messages") == null ){
+			MainPluginFile.warner("null, ", -2);
 			try {
 				root.getNode("messages").setComment("Messages that will be broadcasted.").setValue(
 						TypeToken.of(Text.class), Text.of(MainPluginFile.pluginName)
@@ -56,6 +64,7 @@ public class ConfigManager {
 				MainPluginFile.warner("error attempting to generate default message in config.", 8);
 			}
 		}else{
+			MainPluginFile.warner("filled", -3);
 			sort( root.getNode("messages") );
 		}
 		if( instance().root.getNode("settings") == null ){
@@ -102,6 +111,7 @@ public class ConfigManager {
 	
 	private void sort(CommentedConfigurationNode node){
 		for(CommentedConfigurationNode value : node.getChildrenList()){
+			MainPluginFile.warner("hey! " + value.getPath(), -1);
 			if( value.getNode("message").getValue().equals(String.class) ){
 				Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
 			}else if( value.getNode("message").getValue().equals(Text.class) ){
@@ -117,6 +127,11 @@ public class ConfigManager {
 	private void load(){
 		try{
 			this.root = loader.load();
+			if( this.root.getNode( MainPluginFile.instance().container.getId() ) == null ){
+				
+				loader.createEmptyNode( ConfigurationOptions.defaults() );
+				
+			}
 		} catch (IOException e){
 			e.printStackTrace();
 			MainPluginFile.warner("error attempting to load config.", 6);
@@ -139,7 +154,7 @@ public class ConfigManager {
 			try {
 				instance().root.getNode(
 					String.valueOf( 
-							Messages.indexOf( message )
+							Messages.indexOf( message ) + 1
 						)
 					).getNode("message").setValue(
 							TypeToken.of(Text.class), message

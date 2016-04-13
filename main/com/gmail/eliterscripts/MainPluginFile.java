@@ -36,6 +36,7 @@ public class MainPluginFile {
 	public static String website;
 	public static String nodePrefix;
 	public static String version;
+	public static boolean shareRoot;
 	
 	private static MainPluginFile instance;
 
