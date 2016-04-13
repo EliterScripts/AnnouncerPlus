@@ -3,6 +3,7 @@ package com.gmail.eliterscripts;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Optional;
 
 import org.spongepowered.api.config.DefaultConfig;
@@ -110,7 +111,8 @@ public class ConfigManager {
 	}
 	
 	private void sort(CommentedConfigurationNode node){
-		for(CommentedConfigurationNode value : node.getChildrenList()){
+		Map<Object, ? extends CommentedConfigurationNode> chilMap = node.getChildrenMap();
+		for( CommentedConfigurationNode value : chilMap.values() ){
 			MainPluginFile.warner("hey! " + value.getPath(), -1);
 			if( value.getNode("message").getValue().equals(String.class) ){
 				Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
@@ -119,8 +121,6 @@ public class ConfigManager {
 			}else{
 				MainPluginFile.warner("error attempting to read a message in config.", 7);
 			}
-			
-			
 		}
 	}
 	
