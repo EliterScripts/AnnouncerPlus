@@ -13,7 +13,6 @@ import org.spongepowered.api.text.serializer.TextSerializers;
 import com.google.common.reflect.TypeToken;
 import com.google.inject.Inject;
 
-import ninja.leaping.configurate.ConfigurationNode;
 import ninja.leaping.configurate.commented.CommentedConfigurationNode;
 import ninja.leaping.configurate.hocon.HoconConfigurationLoader;
 import ninja.leaping.configurate.loader.ConfigurationLoader;
@@ -26,6 +25,7 @@ public class ConfigManager {
 	public static ArrayList<Text> Messages = new ArrayList<Text>();
 	
 	public static Optional<Integer> messageListLength;
+	public static Optional<Double> messageInterval;
 	
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
@@ -80,21 +80,66 @@ public class ConfigManager {
 			try {
 				root.getNode(nodeName, "settings").setComment("Settings for " + MainPluginFile.pluginName);
 				
-				root.getNode("list length").setComment(
+				root.getNode(nodeName, "settings", "interval").setComment(
+						"Number of seconds between each broadcast")
+					.setValue( TypeToken.of( Double.class ) , 60.0);
+				
+				root.getNode(nodeName, "settings", "list length").setComment(
 						"This sets how long the list should be sent to the user at once")
 				.setValue(TypeToken.of(Integer.class), 5);
 			} catch (ObjectMappingException e) {
 				e.printStackTrace();
-				MainPluginFile.warner("error attempting to generate default list length in config.", 12);
+				MainPluginFile.warner("error attempting to generate defaults in the config.", 12);
 			}
 		}else{
+			
+			Optional<Double> messagesInterval = Optional.of( root.getNode( nodeName, "settings", "interval").getDouble() );
+			Double msgInt = null;
+			
+			if( messagesInterval.isPresent() ){
+				msgInt = messagesInterval.get();
+				
+				if(msgInt == 0){
+					MainPluginFile.warner("fixing interval. Its value is zero.", 29);
+					try{
+						root.getNode(nodeName, "settings", "interval").setValue(TypeToken.of( Double.class ), 60.0);
+					}catch (ObjectMappingException e) {
+						e.printStackTrace();
+						MainPluginFile.warner("error attempting to fix interval node in config.", 30);
+					}
+					messageInterval = Optional.of( msgInt );
+				}
+				if(msgInt < 0 ){
+					MainPluginFile.warner("fixing interval. Its value is below zero.", 28);
+					try{
+						root.getNode(nodeName, "settings", "interval").setValue(TypeToken.of( Double.class ), msgInt );
+					}catch (ObjectMappingException e){
+						e.printStackTrace();
+						MainPluginFile.warner("error attempting to fix interval ndoe in config.", 31);
+					}
+					messageInterval = Optional.of( msgInt );
+					
+				}
+				messageInterval = Optional.of( msgInt );
+				
+			}else{
+				MainPluginFile.warner("setting interval value. It is not there.", 32);
+				try{
+					root.getNode(nodeName, "settings", "interval").setComment(
+							"Number of seconds between each broadcast")
+						.setValue( TypeToken.of( Double.class ) , 60.0 );
+				}catch (ObjectMappingException e){
+					e.printStackTrace();
+					MainPluginFile.warner("error attempting to set interval value in the config.", 33);
+				}
+			}
+			
 			messageListLength = Optional.of( root.getNode(nodeName, "settings", "list length").getInt() );
 			if( messageListLength.isPresent() ){
 				Integer length = messageListLength.get();
 				if(length < 0 ){
-					MainPluginFile.warner("fixing list length. It's value is below zero.", 13);
+					MainPluginFile.warner("fixing list length. Its value is below zero.", 13);
 					length = Math.abs(length);
-					messageListLength = Optional.of(length);
 					try {
 						root.getNode(nodeName, "settings", "list length").setComment(
 								"This sets how long the list should be sent to the user at once")
@@ -104,9 +149,8 @@ public class ConfigManager {
 						MainPluginFile.warner("error attempting to fix list length node in config.", 14);
 					}
 				}else if(length == 0){
-					MainPluginFile.warner("fixing list length. It's value is zero.", 15);
+					MainPluginFile.warner("fixing list length. Its value is zero.", 15);
 					length = 5;
-					messageListLength = Optional.of(length);
 					try {
 						root.getNode(nodeName, "settings", "list length").setComment(
 								"This sets how long the list should be sent to the user at once")
@@ -116,6 +160,18 @@ public class ConfigManager {
 						MainPluginFile.warner("error attempting to fix list length node in config.", 15);
 					}
 				}
+				messageListLength = Optional.of(length);
+			}else{
+				MainPluginFile.warner("setting list length value. It is not there.", 32);
+				try{
+					root.getNode(nodeName, "settings", "list length").setComment(
+							"This sets how long the list should be sent to the user at once")
+						.setValue( TypeToken.of( Integer.class ) , 5 );
+				}catch (ObjectMappingException e){
+					e.printStackTrace();
+					MainPluginFile.warner("error attempting to set interval value in the config.", 33);
+				}
+				messageListLength = Optional.of(5);
 			}
 		}
 	}
@@ -231,6 +287,4 @@ public class ConfigManager {
 	public static Optional<ArrayList<Text>> getMessages(){
 		return Optional.of(Messages);
 	}
-	
-	
 }
