@@ -182,18 +182,14 @@ public class ConfigManager {
 			delInd = deleteIndex.get();
 			
 			instance().load();
-			instance().setValues();
 			
 			instance().root.getNode(
 					instance().root.getNode(instance().nodeName, "messages")
 						.removeChild( String.valueOf(delInd) )
 						);
-		
-			Messages.remove( delInd );
-			
 			instance().save();
 		
-			Messages.remove( deleteIndex.get() );
+			Messages.remove( delInd - 1 );
 			return Optional.of(0);
 		}else{
 			return Optional.empty();

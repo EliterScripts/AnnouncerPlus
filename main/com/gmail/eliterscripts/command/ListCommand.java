@@ -45,8 +45,8 @@ public class ListCommand implements CommandExecutor{
 				}
 				if(ind < 0){
 					ind = 1;
-				}else if( (int) Math.ceil( messages.size()/ (double) length) > ind){
-					ind = (int) Math.ceil(messages.size()/length);
+				}else if( (int) Math.ceil( messages.size()/ (double) length) < ind){
+					ind = (int) Math.ceil(messages.size()/ (double) length);
 				}
 					
 			}else{
@@ -55,12 +55,19 @@ public class ListCommand implements CommandExecutor{
 					
 		}else{
 				MainPluginFile.warner("error attempting to get messages. Try reloading the configuration.", 17);
+				src.sendMessage( MainPluginFile.commandError("error getting the messages.", 25) );
 				return CommandResult.empty();
 		}
 			//Integer i = (length*(ind-1));
-			for(Integer i = (length*(ind-1)) + 1; i >= (length*ind); i = i + 1 ){
+			
+			//deb
+			MainPluginFile.warner("ind: " + ((Integer) ind), -7);
+			for(Integer i = (length*(ind-1)) + 1; i <= (length*ind); i = i + 1 ){
+				if( messages.size() < i ){
+					break;
+				}
 				src.sendMessage( Text.of("[#" + i + "]" + "[")
-						.concat( messages.get(i) ).concat(
+						.concat( messages.get(i - 1) ).concat(
 								Text.of("]")
 								)
 					);

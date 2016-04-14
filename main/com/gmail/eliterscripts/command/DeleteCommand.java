@@ -1,5 +1,6 @@
 package com.gmail.eliterscripts.command;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.spongepowered.api.command.CommandException;
@@ -22,9 +23,26 @@ public class DeleteCommand implements CommandExecutor{
 			arg = PreArg.get();
 		}else{
 			src.sendMessage( MainPluginFile.commandError(
-					"Could not delete message since the argument isn't correct.", 22
+					"Could not delete message since the argument isn't there.", 22
 					) );
 			return CommandResult.empty();
+		}
+		if(arg < 0){
+			src.sendMessage( MainPluginFile.commandError(
+					"Could not delete message since the argument is below zero.", 26) );
+		}else{
+			Optional<ArrayList<Text>> PreMessages = ConfigManager.getMessages();
+			ArrayList<Text> messages = null;
+			if( PreMessages.isPresent() ){
+				messages = PreMessages.get();
+			}
+			if(arg > messages.size() ){
+				src.sendMessage( MainPluginFile.commandError(
+						"Could not delete messages since the argument is too high.", 27)
+						);
+				return CommandResult.empty();
+			}
+			
 		}
 		
 		Optional<Integer> PreCode = ConfigManager.deleteMessage( Optional.of(arg) );
