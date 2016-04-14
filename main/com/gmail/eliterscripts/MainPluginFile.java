@@ -9,6 +9,8 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.*;
+import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextStyles;
 
 import com.google.inject.Inject;
 
@@ -50,7 +52,18 @@ public class MainPluginFile {
 	}
 	
 	public static void warner(String warnMessage, int code){
-		instance().logger.warn( pluginName + ": " + warnMessage + " [code " + code + "]");
+		instance().logger.warn( warnMessage + " [code " + code + "]");
+	}
+	
+	public static void inform(String informationMessage, int code){
+		instance().logger.info( informationMessage + "[code " + code + "]");
+	}
+	
+	public static Text commandError(String errorMessage, int code){
+		return Text.of( TextColors.RED, TextStyles.BOLD, "COMMAND ERROR: " ).concat( 
+				Text.of(TextColors.YELLOW, errorMessage) ).concat(
+						Text.of(TextColors.AQUA, " [code " + code + "]")
+						);
 	}
 	
 	

@@ -11,7 +11,7 @@ public class MainCommand implements CommandExecutor {
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		src.sendMessage(Text.of("In Development right now."));
-		return null;
+		return CommandResult.empty();
 	}
 	
 }

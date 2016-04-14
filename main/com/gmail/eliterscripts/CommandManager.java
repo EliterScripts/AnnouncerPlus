@@ -7,6 +7,7 @@ import org.spongepowered.api.text.Text;
 
 import com.gmail.eliterscripts.command.AddCommand;
 import com.gmail.eliterscripts.command.CreditsCommand;
+import com.gmail.eliterscripts.command.DeleteCommand;
 import com.gmail.eliterscripts.command.HelpCommand;
 import com.gmail.eliterscripts.command.ListCommand;
 import com.gmail.eliterscripts.command.MainCommand;
@@ -30,7 +31,7 @@ public class CommandManager {
 				.executor(new HelpCommand())
 				.build();
 		CommandSpec AddCMD = CommandSpec.builder()
-				.permission(MainPluginFile.nodePrefix + "add")
+				.permission(MainPluginFile.nodePrefix + ".add")
 				.description(Text.of("Adds a message to the broadcaster"))
 				.executor(new AddCommand())
 				.arguments(
@@ -38,11 +39,19 @@ public class CommandManager {
 						)
 				.build();
 		CommandSpec ListCMD = CommandSpec.builder()
-				.permission(MainPluginFile.nodePrefix + "add")
+				.permission(MainPluginFile.nodePrefix + ".list")
 				.description(Text.of("Lists messages to be broadcasted"))
 				.executor(new ListCommand())
 				.arguments(
 						GenericArguments.optional(GenericArguments.integer(Text.of("page number")))
+						)
+				.build();
+		CommandSpec DeleteCMD = CommandSpec.builder()
+				.permission( MainPluginFile.nodePrefix + ".delete" )
+				.description(Text.of("Removes a message in the broadcast list"))
+				.executor(new DeleteCommand())
+				.arguments(
+						GenericArguments.integer( Text.of("message index number") )
 						)
 				.build();
 		
@@ -50,11 +59,13 @@ public class CommandManager {
 				.description(Text.of(MainPluginFile.pluginName + " main command"))
 				.permission(MainPluginFile.nodePrefix)
 				.executor(new MainCommand())
-				.child(CreditsCMD, "credits", "contibutor", "contributors", "developer", "developers")
-				.child(AddCMD, "add", "make", "+")
-				.child(HelpCMD, "help", "?", "instructions")
-				.child(ListCMD, "list", "messages", "view", "ls")
+				.child(CreditsCMD, "credits", "author", "authors")
+				.child(AddCMD, "add", "+")
+				.child(HelpCMD, "help", "?")
+				.child(ListCMD, "list", "messages", "ls")
+				.child(DeleteCMD, "delete", "del", "remove", "rm", "-")
 				.build();
+		
 		Sponge.getCommandManager().register(MainPluginFile.instance().getContainer(), MainCMD, "announcerplus", "announcer", "acc");
 		MainPluginFile.instance().logger.info("main command has been made!");
 	}

@@ -27,7 +27,7 @@ public class ListCommand implements CommandExecutor{
 		if( preLength.isPresent() ){
 			length = preLength.get();
 		}else{
-			MainPluginFile.warner("error attempting to get max message list length. Try config reload", 16);
+			MainPluginFile.warner("error attempting to get max message list length. Try reloading the configuration.", 16);
 			length = 5;
 		}
 		
@@ -41,12 +41,12 @@ public class ListCommand implements CommandExecutor{
 				if(ind < 0){
 					ind = ind * (-1);
 				}else if(ind == 0){
-					ind = 0;
-				}
-				if(ind <= 0){
 					ind = 1;
-				}else if(Math.ceil(messages.size()/ (double) length) > ind){
-					length = (int) Math.ceil(messages.size()/length);
+				}
+				if(ind < 0){
+					ind = 1;
+				}else if( (int) Math.ceil( messages.size()/ (double) length) > ind){
+					ind = (int) Math.ceil(messages.size()/length);
 				}
 					
 			}else{
@@ -54,21 +54,28 @@ public class ListCommand implements CommandExecutor{
 			}
 					
 		}else{
-				MainPluginFile.warner("error attempting to get messages. Try config reload", 17);
+				MainPluginFile.warner("error attempting to get messages. Try reloading the configuration.", 17);
 				return CommandResult.empty();
 		}
-			Integer i = (length*(ind-1));
-			for(Text message : messages){
+			//Integer i = (length*(ind-1));
+			for(Integer i = (length*(ind-1)) + 1; i >= (length*ind); i = i + 1 ){
+				src.sendMessage( Text.of("[#" + i + "]" + "[")
+						.concat( messages.get(i) ).concat(
+								Text.of("]")
+								)
+					);
+			}
+			/*for(Text message : messages){
 				i = ind + 1;
 				src.sendMessage( Text.of("[#" +
-						messages.indexOf(message) + 1 + "]" + "[").concat(message).concat(
+						((Integer) (messages.indexOf(message) + 1) ) + "]" + "[").concat(message).concat(
 								Text.of("]")
 								)
 					);
 				if( length*ind < i){
 					break;
 				}
-			}
+			}*/
 			src.sendMessage(Text.of("(end of page)"));
 			return CommandResult.success();
 	}
