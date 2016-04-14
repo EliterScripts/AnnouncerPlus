@@ -30,6 +30,8 @@ public class ConfigManager {
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
 	
+	private final String nodeName = MainPluginFile.instance().container.getId();
+	
 	@Inject
 	@DefaultConfig(sharedRoot = false)
 	private Path path;
@@ -47,18 +49,22 @@ public class ConfigManager {
 	}
 	
 	public static void startup(){
-		instance();
 		instance().load();
 		instance().setValues();
 		instance().save();
 	}
 	
 	private void setValues(){
-		if( instance().root.getNode("messages") == null ){
+		
+		if( root.getNode(nodeName, "messages") == null ){
 			MainPluginFile.warner("null, ", -2);
 			try {
-				root.getNode("messages").setComment("Messages that will be broadcasted.").setValue(
-						TypeToken.of(Text.class), Text.of(MainPluginFile.pluginName)
+				root.getNode(nodeName, "messages")
+				.setComment("Messages that will be broadcasted. Messages must be a positive integer.");
+				
+				root.getNode(nodeName, "messages", "example", "message").setValue(
+						TypeToken.of(Text.class), Text.of( MainPluginFile.pluginName + " developed by"
+							+ MainPluginFile.author	)
 						);
 			} catch (ObjectMappingException e) {
 				e.printStackTrace();
@@ -66,19 +72,21 @@ public class ConfigManager {
 			}
 		}else{
 			MainPluginFile.warner("filled", -3);
-			sort( root.getNode("messages") );
+			sort( root.getNode(nodeName, "messages") );
 		}
-		if( instance().root.getNode("settings") == null ){
+		if( instance().root.getNode(nodeName, "settings") == null ){
 			try {
-				root.getNode("settings").setComment("Additional settings for " + MainPluginFile.pluginName)
-				.getNode("list length").setComment("This sets how long the list should be sent to the user at once")
+				root.getNode(nodeName, "settings").setComment("Settings for " + MainPluginFile.pluginName);
+				
+				root.getNode("list length").setComment(
+						"This sets how long the list should be sent to the user at once")
 				.setValue(TypeToken.of(Integer.class), 5);
 			} catch (ObjectMappingException e) {
 				e.printStackTrace();
 				MainPluginFile.warner("error attempting to generate default list length in config.", 12);
 			}
 		}else{
-			messageListLength = Optional.of( root.getNode("settings").getNode("list length").getInt() );
+			messageListLength = Optional.of( root.getNode(nodeName, "settings", "list length").getInt() );
 			if( messageListLength.isPresent() ){
 				Integer length = messageListLength.get();
 				if(length < 0 ){
@@ -86,7 +94,7 @@ public class ConfigManager {
 					length = Math.abs(length);
 					messageListLength = Optional.of(length);
 					try {
-						root.getNode("settings").getNode("list length").setComment(
+						root.getNode(nodeName, "settings", "list length").setComment(
 								"This sets how long the list should be sent to the user at once")
 						.setValue(TypeToken.of(Integer.class), length);
 					} catch (ObjectMappingException e) {
@@ -98,7 +106,7 @@ public class ConfigManager {
 					length = 5;
 					messageListLength = Optional.of(length);
 					try {
-						root.getNode("settings").getNode("list length").setComment(
+						root.getNode(nodeName, "settings", "list length").setComment(
 								"This sets how long the list should be sent to the user at once")
 						.setValue(TypeToken.of(Integer.class), length);
 					} catch (ObjectMappingException e) {
@@ -112,12 +120,13 @@ public class ConfigManager {
 	
 	private void sort(CommentedConfigurationNode node){
 		Map<Object, ? extends CommentedConfigurationNode> chilMap = node.getChildrenMap();
+		
 		for( CommentedConfigurationNode value : chilMap.values() ){
 			MainPluginFile.warner("hey! " + value.getPath(), -1);
-			if( value.getNode("message").getValue().equals(String.class) ){
-				Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
-			}else if( value.getNode("message").getValue().equals(Text.class) ){
-				Messages.add((Text) value.getNode("message").getValue(Text.class));
+			if( value.getNode("message").getValue().getClass() == String.class ){
+				Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode(nodeName, "message").getString() ));
+			}else if( value.getNode("message").getValue().getClass() == Text.class ){
+				Messages.add((Text) value.getNode(nodeName, "message").getValue(Text.class));
 			}else{
 				MainPluginFile.warner("error attempting to read a message in config.", 7);
 			}
@@ -127,11 +136,6 @@ public class ConfigManager {
 	private void load(){
 		try{
 			this.root = loader.load();
-			if( this.root.getNode( MainPluginFile.instance().container.getId() ) == null ){
-				
-				loader.createEmptyNode( ConfigurationOptions.defaults() );
-				
-			}
 		} catch (IOException e){
 			e.printStackTrace();
 			MainPluginFile.warner("error attempting to load config.", 6);
