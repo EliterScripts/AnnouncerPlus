@@ -78,6 +78,9 @@ public class MainPluginFile {
 		ConfigManager.startup();
 		
 		CommandManager.registerAll();
+		
+		BroadcastManager.makeSchedule();
+
 	}
 	
 	public static Object reloadConfig(){
@@ -90,12 +93,10 @@ public class MainPluginFile {
 	public void onJoin(ClientConnectionEvent.Join event) {
 		
 		Player person = event.getTargetEntity();
-		
-		String person_name = person.getName();
-		
-		event.getTargetEntity().sendMessage(
-				Text.of("Welcome ", person_name, " to the server!")
-		);
+
+		if( !( person.hasPermission( nodePrefix + "." ) ) ){
+			
+		}
 		
 	}
 	

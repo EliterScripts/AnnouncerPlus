@@ -1,4 +1,4 @@
-package com.gmail.eliterscripts;
+/*package com.gmail.eliterscripts;
 
 import java.util.Optional;
 
@@ -12,22 +12,19 @@ public class ConfigSorter extends ConfigManager{
 		
 	}
 	public static Optional<String> order(CommentedConfigurationNode root, String nodeName){
-		CommentedConfigurationNode orderConfValue = root.getNode(nodeName, "settings", "order");
+		//CommentedConfigurationNode orderConfValue = root.getNode(nodeName, "settings", "order");
 		
-		if(orderConfValue == null){
+		if( root.getNode(nodeName, "setting", "order") != null ){
+			Optional<String> preConfValue;
 			try {
-				root.getNode(nodeName, "settings", "order").setComment(
-						"how the messages will be pulled, to be broadcasted.")
-					.setValue(TypeToken.of(String.class), "sequential" );
+				preConfValue = Optional.of( 
+						root.getNode(nodeName, "settings", "order")
+						.getValue( TypeToken.of( String.class ) ) );
 			} catch (ObjectMappingException e) {
 				e.printStackTrace();
-				MainPluginFile.warner("error attempting to set default value for 'order' in config.", 36);
-				
+				MainPluginFile.warner("unable to get \"order\", after node has been declared. (That's weird!)", 39);
+				preConfValue = Optional.of("sequential");
 			}
-		}
-		
-		if( orderConfValue != null ){
-			Optional<String> preConfValue = Optional.of( orderConfValue.getString() );
 			String postValue = null;
 			if( preConfValue.isPresent() )
 				postValue = preConfValue.get();
@@ -72,5 +69,7 @@ public class ConfigSorter extends ConfigManager{
 			}
 			return Optional.of( "s" );
 		}
+		
 	}
 }
+*/

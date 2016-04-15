@@ -3,6 +3,7 @@ package com.gmail.eliterscripts;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Scheduler;
@@ -20,11 +21,17 @@ public class BroadcastManager {
 		}
 	}
 	
-	public void makeSchedule(){
+	public static void makeSchedule(){
 		Scheduler scheduler = Sponge.getScheduler();
 		Task.Builder taskBuilder = scheduler.createTaskBuilder();
 		
-		
+		Optional<Integer> preInt = ConfigManager.messageInterval;
+		Integer interval = null;
+		if( preInt.isPresent() ){
+			interval = preInt.get();
+		}else{
+			interval = 60;
+		}
 		
 		taskBuilder.execute(new Runnable() {
 			public void run() {
@@ -49,9 +56,12 @@ public class BroadcastManager {
 							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
 						}
 					}
+					
 				}
 			}
-		});
+		}).interval(interval, TimeUnit.SECONDS).name(
+				MainPluginFile.instance().container.getId() + "-broadcaster").submit(
+						MainPluginFile.instance().container);
 		
 	}
 }
