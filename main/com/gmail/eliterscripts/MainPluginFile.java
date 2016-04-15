@@ -55,6 +55,10 @@ public class MainPluginFile {
 		instance().logger.warn( warnMessage + " [code " + code + "]");
 	}
 	
+	public static void debuger(String trivialMessage, int code){
+		instance().logger.debug( trivialMessage + "[code " + code + "]");
+	}
+	
 	public static void inform(String informationMessage, int code){
 		instance().logger.info( informationMessage + "[code " + code + "]");
 	}

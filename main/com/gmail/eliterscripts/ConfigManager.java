@@ -26,6 +26,7 @@ public class ConfigManager {
 	
 	public static Optional<Integer> messageListLength;
 	public static Optional<Double> messageInterval;
+	public static Optional<String> messageOrder;
 	
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
@@ -133,6 +134,8 @@ public class ConfigManager {
 					MainPluginFile.warner("error attempting to set interval value in the config.", 33);
 				}
 			}
+			
+			messageOrder = ConfigSorter.order(root, nodeName);
 			
 			messageListLength = Optional.of( root.getNode(nodeName, "settings", "list length").getInt() );
 			if( messageListLength.isPresent() ){

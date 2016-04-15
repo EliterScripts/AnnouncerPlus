@@ -1,5 +1,9 @@
 package com.gmail.eliterscripts;
 
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.scheduler.Scheduler;
 import org.spongepowered.api.scheduler.Task;
@@ -8,13 +12,44 @@ import org.spongepowered.api.text.channel.MessageChannel;
 
 public class BroadcastManager {
 	
+	private static Integer messageNumber;
+	
+	public BroadcastManager(){
+		if(messageNumber == null){
+			messageNumber = 0;
+		}
+	}
+	
 	public void makeSchedule(){
 		Scheduler scheduler = Sponge.getScheduler();
 		Task.Builder taskBuilder = scheduler.createTaskBuilder();
 		
+		
+		
 		taskBuilder.execute(new Runnable() {
 			public void run() {
-				MessageChannel.TO_PLAYERS.send(  );
+				Optional<String> pre = ConfigManager.messageOrder;
+				String post = null;
+				Optional<ArrayList<Text>> preMessageList = ConfigManager.getMessages();
+				ArrayList<Text> postMessageList;
+				if( preMessageList.isPresent() ){
+					postMessageList = preMessageList.get();
+					
+					if( pre.isPresent() ){
+						post = pre.get();
+					}else{
+						post = "s";
+					}
+					
+					if(postMessageList.size() > 0){
+						if(post == "s"){
+							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
+						}else if(post == "r"){
+							messageNumber = ThreadLocalRandom.current().nextInt(0, postMessageList.size() + 1);
+							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
+						}
+					}
+				}
 			}
 		});
 		
