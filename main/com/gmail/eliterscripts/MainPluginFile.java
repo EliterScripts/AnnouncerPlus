@@ -9,6 +9,7 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.*;
+import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -18,6 +19,10 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import org.slf4j.Logger;
+
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 
 @Plugin(id = "announcerplus", name = "AnnouncerPlus", version = "A0.0.1")
@@ -90,13 +95,16 @@ public class MainPluginFile {
 	}
 	
 	@Listener
-	public void onJoin(ClientConnectionEvent.Join event) {
+	public void onJoin (ClientConnectionEvent.Join event) {
 		
 		Player person = event.getTargetEntity();
-
-		if( !( person.hasPermission( nodePrefix + "." ) ) ){
-			
-		}
+		
+		MessageChannel originalChannel = event.getOriginalChannel();
+		MessageChannel newChannel = MessageChannel.combined(originalChannel, ...)
+		
+	}
+	
+	private static combine(){
 		
 	}
 	
