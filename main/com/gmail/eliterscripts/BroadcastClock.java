@@ -11,11 +11,11 @@ import org.spongepowered.api.scheduler.Task;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.channel.MessageChannel;
 
-public class BroadcastManager {
+public class BroadcastClock {
 	
 	private static Integer messageNumber;
 	
-	public BroadcastManager(){
+	public BroadcastClock(){
 		if(messageNumber == null){
 			messageNumber = 0;
 		}
@@ -50,7 +50,7 @@ public class BroadcastManager {
 					
 					if(postMessageList.size() > 0){
 						if(post == "s"){
-							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
+							BroadcastChannel.instance().send( postMessageList.get( messageNumber ) );
 						}else if(post == "r"){
 							messageNumber = ThreadLocalRandom.current().nextInt(0, postMessageList.size() + 1);
 							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );

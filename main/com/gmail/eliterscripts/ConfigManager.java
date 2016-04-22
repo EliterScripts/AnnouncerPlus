@@ -27,6 +27,7 @@ public class ConfigManager {
 	public static Optional<Integer> messageListLength;
 	public static Optional<Integer> messageInterval;
 	public static Optional<String> messageOrder;
+	public static Optional<Text> messagePrefix;
 	
 	private static final ConfigManager instance = new ConfigManager();
 	private CommentedConfigurationNode root;
@@ -95,6 +96,13 @@ public class ConfigManager {
 						"This sets how long the list should be sent to the user at once")
 					.setValue(TypeToken.of(Integer.class), 5);
 				messageListLength = Optional.of(5);
+				
+				root.getNode(nodeName, "settings", "prefix").setComment(
+						"This sets the prefix, before each broadcasted message."
+						)
+					.setValue(TypeToken.of(Text.class),
+						Text.of("[" + MainPluginFile.pluginName + "]")
+							);
 				
 			} catch (ObjectMappingException e) {
 				e.printStackTrace();
@@ -242,7 +250,60 @@ public class ConfigManager {
 					}
 					messageListLength = Optional.of(5);
 				}
-			}	
+			}
+			
+			if( !( root.getNode(nodeName, "settings", "prefix").isVirtual() ) ){
+				try {
+					Optional<Text> preMessagePrefix = null;		
+					Object prefixType = root.getNode(nodeName, "settings", "prefix").getValue().getClass();
+					if(prefixType == String.class){
+						preMessagePrefix = Optional.of(
+								TextSerializers.FORMATTING_CODE.deserializeUnchecked(
+										(String) root.getNode(nodeName, "settings", "prefix").getString()
+										)
+								);
+					}else if(prefixType == Text.class){
+						preMessagePrefix = Optional.of(
+									(Text) root.getNode(nodeName, "settings", "prefix").getValue(
+											TypeToken.of(Text.class)
+										)
+								);
+					}else{
+						MainPluginFile.debuger("could not load prefix variable in the config - it wan't"
+								+ " an acceptable value. Setting to default.", 41);
+					}
+					
+					if(preMessagePrefix.isPresent()){
+						messagePrefix = preMessagePrefix;
+					}else{
+						root.getNode(nodeName, "settings", "prefix").setComment(
+								"This sets the prefix, before each broadcasted message."
+								)
+							.setValue(TypeToken.of(Text.class),
+								Text.of("[" + MainPluginFile.pluginName + "]")
+									);
+						messagePrefix = Optional.of((Text) Text.of("[" + MainPluginFile.pluginName + "]") );
+					}
+				} catch (ObjectMappingException e) {
+					e.printStackTrace();
+					MainPluginFile.debuger("could not get \"prefix\" from config file.", 42);
+				}				
+			}else{
+				MainPluginFile.debuger("attempting to set \"prefix\" on the config file.", 44);
+				try{
+					root.getNode(nodeName, "settings", "prefix").setComment(
+							"This sets the prefix, before each broadcasted message."
+							)
+						.setValue(TypeToken.of(Text.class),
+							Text.of("[" + MainPluginFile.pluginName + "]")
+								);
+				} catch (ObjectMappingException e) {
+					e.printStackTrace();
+					MainPluginFile.debuger("could not set \"prefix\" on the config file.", 43);
+				}
+				messagePrefix = Optional.of((Text) Text.of("[" + MainPluginFile.pluginName + "]") );
+			}
+			
 		}
 	}
 	

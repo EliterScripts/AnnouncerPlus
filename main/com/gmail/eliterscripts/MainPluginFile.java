@@ -84,7 +84,10 @@ public class MainPluginFile {
 		
 		CommandManager.registerAll();
 		
-		BroadcastManager.makeSchedule();
+		
+		
+		
+		BroadcastClock.makeSchedule();
 
 	}
 	
@@ -93,18 +96,15 @@ public class MainPluginFile {
 		ConfigManager.startup();
 		return null;
 	}
+
+	private BroadcastChannel broadcastChannel = new BroadcastChannel();
 	
 	@Listener
 	public void onJoin (ClientConnectionEvent.Join event) {
 		
 		Player person = event.getTargetEntity();
 		
-		MessageChannel originalChannel = event.getOriginalChannel();
-		MessageChannel newChannel = MessageChannel.combined(originalChannel, ...)
-		
-	}
-	
-	private static combine(){
+		BroadcastChannel.setChannel( Optional.of(person), Optional.of(event.getOriginalChannel()) );
 		
 	}
 	
