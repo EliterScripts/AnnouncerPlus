@@ -21,6 +21,8 @@ public class BroadcastClock {
 		}
 	}
 	
+	private static BroadcastChannel broadcastChannel = new BroadcastChannel();
+	
 	public static void makeSchedule(){
 		Scheduler scheduler = Sponge.getScheduler();
 		Task.Builder taskBuilder = scheduler.createTaskBuilder();
@@ -50,7 +52,8 @@ public class BroadcastClock {
 					
 					if(postMessageList.size() > 0){
 						if(post == "s"){
-							BroadcastChannel.instance().send( postMessageList.get( messageNumber ) );
+							broadcastChannel.send( postMessageList.get( messageNumber) );
+							//MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
 						}else if(post == "r"){
 							messageNumber = ThreadLocalRandom.current().nextInt(0, postMessageList.size() + 1);
 							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );

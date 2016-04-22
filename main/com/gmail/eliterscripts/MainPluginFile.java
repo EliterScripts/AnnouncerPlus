@@ -104,8 +104,19 @@ public class MainPluginFile {
 		
 		Player person = event.getTargetEntity();
 		
-		BroadcastChannel.setChannel( Optional.of(person), Optional.of(event.getOriginalChannel()) );
+		setChannel( Optional.of(person), Optional.of(event.getOriginalChannel()) );
 		
+	}
+	
+	private void setChannel(Optional<Player> player, Optional<MessageChannel> originalChannel) {
+		Player postPlayer;
+		MessageChannel postOriginalChannel;
+		if( player.isPresent() && originalChannel.isPresent() ){
+			postPlayer = player.get();
+			postOriginalChannel = originalChannel.get();
+			MessageChannel newChannel = MessageChannel.combined(postOriginalChannel, broadcastChannel);
+			postPlayer.setMessageChannel(newChannel);
+		}
 	}
 	
 	public static MainPluginFile instance(){
