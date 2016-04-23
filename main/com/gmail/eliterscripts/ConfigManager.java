@@ -310,6 +310,8 @@ public class ConfigManager {
 			MainPluginFile.inform("found 0 messages in configuration file.", 18);
 		}else{
 			MainPluginFile.inform("found " + chilMap.size() + " messages in configuration file.", 19);
+			
+			Integer indexer = 0;
 			for( CommentedConfigurationNode value : chilMap.values() ){
 				
 				try{
@@ -323,6 +325,12 @@ public class ConfigManager {
 						MainPluginFile.warner("error attempting to read a message in config.", 7);
 					}
 					
+					if(indexer != Integer.valueOf( (String) value.getKey()) ){
+						Object nodeValue = root.getNode( nodeName, "messages", value.getKey() ).getValue();
+						root.getNode( nodeName, "messages").removeChild( value.getKey() );
+						root.getNode( nodeName, "messages", indexer).setValue(nodeValue);
+					}
+					
 				}catch( NumberFormatException e ){
 					String preVal = new String( (String) value.getKey() );
 					String val;
@@ -334,6 +342,7 @@ public class ConfigManager {
 					MainPluginFile.warner("message indexed under \"" + val + "\" is not an integer. This message will be " +
 							"ignored.", 20);
 				}
+				indexer = indexer + 1;
 			}
 		}
 	}
@@ -362,11 +371,15 @@ public class ConfigManager {
 			delInd = deleteIndex.get();
 			
 			instance().load();
+			instance().setValues();
 			
 			instance().root.getNode(
 					instance().root.getNode(instance().nodeName, "messages")
 						.removeChild( String.valueOf(delInd) )
 						);
+			
+			instance().setValues();
+			
 			instance().save();
 		
 			Messages.remove( delInd - 1 );
