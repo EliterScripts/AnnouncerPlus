@@ -1,6 +1,5 @@
 package com.gmail.eliterscripts;
 import org.spongepowered.api.config.DefaultConfig;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.SendCommandEvent;
 import org.spongepowered.api.event.game.state.GameStartedServerEvent;
@@ -9,7 +8,6 @@ import org.spongepowered.api.event.server.ClientPingServerEvent;
 import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 import org.spongepowered.api.text.*;
-import org.spongepowered.api.text.channel.MessageChannel;
 import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -19,10 +17,6 @@ import java.nio.file.Path;
 import java.util.Optional;
 
 import org.slf4j.Logger;
-
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.network.ClientConnectionEvent;
 
 
 @Plugin(id = "announcerplus", name = "AnnouncerPlus", version = "A0.0.1")
@@ -82,12 +76,15 @@ public class MainPluginFile {
 		
 		ConfigManager.startup();
 		
-		CommandManager.registerAll();
+		logger.info("proccessed configuration file.");
 		
+		CommandManager.registerAll();		
 		
-		
+		logger.info("Commands loaded.");
 		
 		BroadcastClock.makeSchedule();
+		
+		logger.info("Broadcast Clock loaded.");
 
 	}
 	
@@ -96,27 +93,10 @@ public class MainPluginFile {
 		ConfigManager.startup();
 		return null;
 	}
-
-	private BroadcastChannel broadcastChannel = new BroadcastChannel();
 	
 	@Listener
 	public void onJoin (ClientConnectionEvent.Join event) {
 		
-		Player person = event.getTargetEntity();
-		
-		setChannel( Optional.of(person), Optional.of(event.getOriginalChannel()) );
-		
-	}
-	
-	private void setChannel(Optional<Player> player, Optional<MessageChannel> originalChannel) {
-		Player postPlayer;
-		MessageChannel postOriginalChannel;
-		if( player.isPresent() && originalChannel.isPresent() ){
-			postPlayer = player.get();
-			postOriginalChannel = originalChannel.get();
-			MessageChannel newChannel = MessageChannel.combined(postOriginalChannel, broadcastChannel);
-			postPlayer.setMessageChannel(newChannel);
-		}
 	}
 	
 	public static MainPluginFile instance(){

@@ -6,6 +6,7 @@ import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
 import com.gmail.eliterscripts.command.AddCommand;
+import com.gmail.eliterscripts.command.ConfigReloadCommand;
 import com.gmail.eliterscripts.command.CreditsCommand;
 import com.gmail.eliterscripts.command.DeleteCommand;
 import com.gmail.eliterscripts.command.HelpCommand;
@@ -54,16 +55,25 @@ public class CommandManager {
 						GenericArguments.integer( Text.of("message index number") )
 						)
 				.build();
+		CommandSpec reloadCMD = CommandSpec.builder()
+				.permission( MainPluginFile.nodePrefix + ".reload" )
+				.description(Text.of("Reloads configuration file"))
+				.executor(new ConfigReloadCommand())
+				.arguments(
+						GenericArguments.none()
+						)
+				.build();
 		
 		CommandSpec MainCMD = CommandSpec.builder()
 				.description(Text.of(MainPluginFile.pluginName + " main command"))
 				.permission(MainPluginFile.nodePrefix)
 				.executor(new MainCommand())
-				.child(CreditsCMD, "credits", "author", "authors")
+				.child(CreditsCMD, "credits")
 				.child(AddCMD, "add", "+")
 				.child(HelpCMD, "help", "?")
 				.child(ListCMD, "list", "messages", "ls")
 				.child(DeleteCMD, "delete", "del", "remove", "rm", "-")
+				.child(reloadCMD, "reload", "load", "rl", "resync", "sync")
 				.build();
 		
 		Sponge.getCommandManager().register(MainPluginFile.instance().getContainer(), MainCMD, "announcerplus", "announcer", "acc");

@@ -59,8 +59,6 @@ public class ConfigManager {
 	private void setValues(){
 		
 		if( root.getNode(nodeName, "messages").isVirtual() ){
-			//deb
-			MainPluginFile.warner("null, ", -2);
 			try {
 				root.getNode(nodeName, "messages")
 				.setComment("Messages that will be broadcasted. Messages must be a positive integer.");
@@ -74,8 +72,6 @@ public class ConfigManager {
 				MainPluginFile.warner("error attempting to generate default message in config.", 8);
 			}
 		}else{
-			//deb
-			MainPluginFile.warner("filled", -3);
 			sort( root.getNode(nodeName, "messages") );
 		}
 		if( root.getNode(nodeName, "settings").isVirtual() ){
@@ -319,11 +315,8 @@ public class ConfigManager {
 				try{
 					Integer.valueOf( (String) value.getKey() );
 					
-					//deb
-					MainPluginFile.warner("hey! " + value.getPath() + ":" + value.getKey(), -1);
 					if( value.getNode("message").getValue().getClass() == String.class ){
 						Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
-						MainPluginFile.warner("SUP! " + Messages.size(), -6);
 					}else if( value.getNode("message").getValue().getClass() == Text.class ){
 						Messages.add((Text) value.getNode("message").getValue(Text.class));
 					}else{

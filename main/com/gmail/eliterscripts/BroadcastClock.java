@@ -17,9 +17,10 @@ public class BroadcastClock {
 	
 	public BroadcastClock(){ }
 	
-	private static BroadcastChannel broadcastChannel = new BroadcastChannel();
-	
 	public static void makeSchedule(){
+		
+		MainPluginFile.instance().logger.info("loading broadcast clock...");
+		
 		Scheduler scheduler = Sponge.getScheduler();
 		Task.Builder taskBuilder = scheduler.createTaskBuilder();
 		
@@ -36,7 +37,15 @@ public class BroadcastClock {
 				Optional<String> pre = ConfigManager.messageOrder;
 				String post = null;
 				Optional<ArrayList<Text>> preMessageList = ConfigManager.getMessages();
+				Optional<Text> prePrefix = ConfigManager.messagePrefix;
 				ArrayList<Text> postMessageList;
+				Text prefix;
+				if( prePrefix.isPresent() ){
+					prefix = prePrefix.get();
+				}else{
+					prefix = Text.of("");
+				}
+				
 				if( preMessageList.isPresent() ){
 					postMessageList = preMessageList.get();
 					
@@ -48,19 +57,26 @@ public class BroadcastClock {
 					
 					if(postMessageList.size() > 0){
 						if(post == "s"){
-							broadcastChannel.send( postMessageList.get( messageNumber) );
-							//MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
+							MessageChannel.TO_PLAYERS.send( Text.of(prefix,
+									postMessageList.get( messageNumber ) 
+									) 
+								);
+							messageNumber = messageNumber + 1;
 						}else if(post == "r"){
 							messageNumber = ThreadLocalRandom.current().nextInt(0, postMessageList.size() + 1);
 							MessageChannel.TO_PLAYERS.send( postMessageList.get( messageNumber ) );
 						}
 					}
 					
+					if( messageNumber >= postMessageList.size() ){
+						messageNumber = 0;
+					}
+					
 				}
 			}
 		}).interval(interval, TimeUnit.SECONDS).name(
 				MainPluginFile.instance().container.getId() + "-broadcaster").submit(
-						MainPluginFile.instance().container);
+						MainPluginFile.instance());
 		
 	}
 }

@@ -58,10 +58,6 @@ public class ListCommand implements CommandExecutor{
 				src.sendMessage( MainPluginFile.commandError("error getting the messages.", 25) );
 				return CommandResult.empty();
 		}
-			//Integer i = (length*(ind-1));
-			
-			//deb
-			MainPluginFile.warner("ind: " + ((Integer) ind), -7);
 			for(Integer i = (length*(ind-1)) + 1; i <= (length*ind); i = i + 1 ){
 				if( messages.size() < i ){
 					break;
@@ -72,18 +68,7 @@ public class ListCommand implements CommandExecutor{
 								)
 					);
 			}
-			/*for(Text message : messages){
-				i = ind + 1;
-				src.sendMessage( Text.of("[#" +
-						((Integer) (messages.indexOf(message) + 1) ) + "]" + "[").concat(message).concat(
-								Text.of("]")
-								)
-					);
-				if( length*ind < i){
-					break;
-				}
-			}*/
-			src.sendMessage(Text.of("(end of page)"));
+			src.sendMessage(Text.of("(end of page " + ind + "/" + ((int) Math.ceil(messages.size()/ (double) length)) + ")"));
 			return CommandResult.success();
 	}
 
