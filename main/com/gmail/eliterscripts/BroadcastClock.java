@@ -13,13 +13,9 @@ import org.spongepowered.api.text.channel.MessageChannel;
 
 public class BroadcastClock {
 	
-	private static Integer messageNumber;
+	private static Integer messageNumber = 0;
 	
-	public BroadcastClock(){
-		if(messageNumber == null){
-			messageNumber = 0;
-		}
-	}
+	public BroadcastClock(){ }
 	
 	private static BroadcastChannel broadcastChannel = new BroadcastChannel();
 	

@@ -14,17 +14,15 @@ import com.gmail.eliterscripts.MainPluginFile;
 public class HelpCommand implements CommandExecutor{
 
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-			src.sendMessage(Text.builder(MainPluginFile.pluginName )
-	                .color(TextColors.GREEN).style(TextStyles.BOLD)
-	                .append(
-	                        Text.builder(" developed by ").color(TextColors.GREEN).build()
-	                        )
-	                .append(
-	                                Text.builder(MainPluginFile.author).style(TextStyles.BOLD).style(TextStyles.ITALIC).build()
-	                )
-	                .build()
-	        );
-		return null;
+			src.sendMessage(Text.of(
+					TextColors.AQUA, MainPluginFile.pluginName, TextColors.RESET,
+					", ", TextColors.LIGHT_PURPLE, "developed by:")
+					);
+			src.sendMessage(Text.of(
+					TextColors.GOLD, MainPluginFile.author)
+					);
+					
+		return CommandResult.success();
 	}
 
 }
