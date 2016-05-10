@@ -311,11 +311,13 @@ public class ConfigManager {
 		}else{
 			MainPluginFile.inform("found " + chilMap.size() + " messages in configuration file.", 19);
 			
-			Integer indexer = 0;
+			Integer indexer = 1;
 			for( CommentedConfigurationNode value : chilMap.values() ){
 				
+				String key;
 				try{
-					Integer.valueOf( (String) value.getKey() );
+					key = String.valueOf( value.getKey() );
+					Integer.valueOf((String) key);
 					
 					if( value.getNode("message").getValue().getClass() == String.class ){
 						Messages.add(TextSerializers.FORMATTING_CODE.deserialize( value.getNode("message").getString() ));
@@ -325,12 +327,12 @@ public class ConfigManager {
 						MainPluginFile.warner("error attempting to read a message in config.", 7);
 					}
 					
-					if(indexer != Integer.valueOf( (String) value.getKey()) ){
-						Object nodeValue = root.getNode( nodeName, "messages", value.getKey() ).getValue();
+					if(indexer != Integer.valueOf( key ) ){
+						Object nodeValue = value;
 						root.getNode( nodeName, "messages").removeChild( value.getKey() );
-						root.getNode( nodeName, "messages", indexer).setValue(nodeValue);
+						root.getNode( nodeName, "messages", indexer).setValue(TypeToken.of(nodeValue.getClass()), nodeValue);
 					}
-					
+					indexer = indexer + 1;
 				}catch( NumberFormatException e ){
 					String preVal = new String( (String) value.getKey() );
 					String val;
@@ -342,7 +344,6 @@ public class ConfigManager {
 					MainPluginFile.warner("message indexed under \"" + val + "\" is not an integer. This message will be " +
 							"ignored.", 20);
 				}
-				indexer = indexer + 1;
 			}
 		}
 	}

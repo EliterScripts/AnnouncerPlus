@@ -90,6 +90,7 @@ public class MainPluginFile {
 	
 	public static Object reloadConfig(){
 		new ConfigManager();
+		ConfigManager.Messages.clear();
 		ConfigManager.startup();
 		return null;
 	}

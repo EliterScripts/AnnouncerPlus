@@ -13,6 +13,7 @@ public class ConfigReloadCommand implements CommandExecutor{
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
 		
+		
 		MainPluginFile.reloadConfig();
 		
 		return CommandResult.success();

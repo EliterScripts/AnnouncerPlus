@@ -59,6 +59,7 @@ public class DeleteCommand implements CommandExecutor{
 			src.sendMessage( Text.of("Successfully deleted message indexed previously indexed under \""
 					+ arg + "\"."
 					) );
+			MainPluginFile.reloadConfig();
 			return CommandResult.success();
 		}else{
 			src.sendMessage( MainPluginFile.commandError(
